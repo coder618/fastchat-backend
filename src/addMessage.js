@@ -6,16 +6,23 @@ async function addMessage(dataObj) {
         const savedFeedback = await newMessage.save();
 
         if (savedFeedback) {
-            console.log("saved");
-            return true;
+            // console.log("saved");
+            return {
+                status: true,
+                savedItem: savedFeedback,
+                message: "Message saved",
+            };
         } else {
-            console.log("Something is wrong while saving the data");
-            return false;
+            return {
+                status: false,
+                message: "Message saved failed",
+            };
         }
     } catch (err) {
         console.log(err);
         return {
             status: false,
+            message: "Something is wrong while saving the message",
         };
     }
 }

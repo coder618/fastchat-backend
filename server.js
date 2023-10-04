@@ -49,10 +49,13 @@ io.on("connection", (socket) => {
 
     socket.on("send-message", async (messageObj) => {
         // add message to data base
-        const status = await addMessage(messageObj);
+        const saveStatus = await addMessage(messageObj);
 
-        if (status == true) {
-            const finalResponse = { ...messageObj, clientId: messageObj.clientId };
+        if (saveStatus.status == true) {
+            const finalResponse = {
+                messageObj: saveStatus.savedItem,
+                clientId: messageObj.clientId,
+            };
 
             io.emit("message-saved", finalResponse); // Broadcast the message to all connected clients
         } else {
