@@ -2,7 +2,7 @@
 
 FastChat is a multi room realtime chatting application in built in MERN Stack.
 
-### [Preview Application](https://nodejs.org/)
+### [Preview Application](https://chat-618.web.app/)
 
 ### Technology
 
