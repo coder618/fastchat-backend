@@ -9,11 +9,6 @@ const app = express();
 const addMessage = require("./src/addMessage");
 const getMessage = require("./src/getMessage");
 const config = require("./config");
-
-// const userList = [];
-// const roomObj = { developer: [], general: [], offtopic: [], designer: [] };
-// const AllMessageArray = [];
-
 const db = require("./db");
 
 const server = http.createServer(app);
@@ -30,21 +25,14 @@ const io = require("socket.io")(server, {
 });
 
 app.get("/", (req, res, next) => {
-    res.send("working");
-});
-
-app.get("/list", (req, res, next) => {
-    res.send(Object.keys(io.engine.clients));
+    res.send("API Working");
 });
 
 io.on("connection", (socket) => {
-    // console.log("socket id is >> ", socket.id);
-
     /**
      * When received message from Front-end
      * 1. Saved the message to database
      * 2. trigger 'message-saved'
-     *
      */
 
     socket.on("send-message", async (messageObj) => {
@@ -72,13 +60,6 @@ io.on("connection", (socket) => {
 
         const savedMessageArray = await getMessage(currentRoom);
 
-        console.log(
-            "Switch Room event trigger with ",
-            currentRoom,
-            clientId,
-            savedMessageArray.status
-        );
-
         if (savedMessageArray.status) {
             io.to(clientId).emit("switch-room-success", savedMessageArray);
         } else {
@@ -90,7 +71,7 @@ io.on("connection", (socket) => {
 // ---- Connect the database and start the server
 db.connect(config.DB_URL)
     .then(() => {
-        console.log("connnected to mongodb");
+        console.log("Connected to mongodb");
         server.listen(6900, () => {
             console.log("Server listening on port 6900");
         });
