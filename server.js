@@ -36,16 +36,33 @@ io.on("connection", (socket) => {
      */
 
     socket.on("send-message", async (messageObj) => {
-        // add message to data base
-        const saveStatus = await addMessage(messageObj);
+        if (
+            "messageId" in messageObj &&
+            messageObj.messageId &&
+            "room" in messageObj &&
+            messageObj.room &&
+            "textMessage" in messageObj &&
+            messageObj.textMessage &&
+            "currentUserData" in messageObj &&
+            messageObj.currentUserData &&
+            "userName" in messageObj.currentUserData &&
+            messageObj.currentUserData.userName &&
+            "userEmail" in messageObj.currentUserData &&
+            messageObj.currentUserData.userEmail
+        ) {
+            // add message to data base
+            const saveStatus = await addMessage(messageObj);
 
-        if (saveStatus.status == true) {
-            const finalResponse = {
-                messageObj: saveStatus.savedItem,
-                clientId: messageObj.clientId,
-            };
+            if (saveStatus.status == true) {
+                const finalResponse = {
+                    messageObj: saveStatus.savedItem,
+                    clientId: messageObj.clientId,
+                };
 
-            io.emit("message-saved", finalResponse); // Broadcast the message to all connected clients
+                io.emit("message-saved", finalResponse); // Broadcast the message to all connected clients
+            } else {
+                io.emit("message-saved-failed", messageObj); // Broadcast the message to all connected clients
+            }
         } else {
             io.emit("message-saved-failed", messageObj); // Broadcast the message to all connected clients
         }
