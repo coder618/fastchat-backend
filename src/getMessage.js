@@ -5,7 +5,7 @@ async function getMessage(room) {
 
     try {
         const messageArray = await MessagesModel.find({ room: room })
-            // .sort({ updatedAt: -1 })
+            .sort({ timestamp: -1 })
             .limit(1000)
             .exec();
 
